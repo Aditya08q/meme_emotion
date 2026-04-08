@@ -1,0 +1,20 @@
+# Virtual environments
+myenv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# ML models
+*.pkl
+*.h5
+*.pt
+*.pth
+data/
+meme/
+
+# Other
+*.zip
+*.csv
+.DS_Store

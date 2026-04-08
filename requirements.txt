@@ -1,0 +1,8 @@
+numpy
+opencv-python
+tensorflow==2.14.0
+Pillow
+matplotlib
+scikit-learn
+mtcnn
+tqdm
