@@ -1,4 +1,4 @@
-# src/train_model.py
+
 import os
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import layers, models, callbacks, optimizers
@@ -6,16 +6,13 @@ import tensorflow as tf
 import json
 
 
-
-
-# CONFIG
 TRAIN_DIR = "data/train"
 TEST_DIR  = "data/test"
 MODEL_DIR = "models"
 IMG_SIZE = (48,48)
 BATCH_SIZE = 64
 EPOCHS = 30
-NUM_CLASSES = 5  # ensure your folders = 5 emotions
+NUM_CLASSES = 5  
 
 os.makedirs(MODEL_DIR, exist_ok=True)
 
@@ -40,7 +37,6 @@ def build_model(input_shape=(48,48,1), num_classes=7):
     return model
 
 def main():
-    # Data generators (grayscale since typical FER uses grayscale)
     train_datagen = ImageDataGenerator(
     rescale=1./255,
     rotation_range=25,
@@ -63,10 +59,10 @@ def main():
         batch_size=BATCH_SIZE, class_mode='categorical', shuffle=False
     )
 
-    # Save class indices mapping for later
+   
     print("Class indices:", train_gen.class_indices)
 
-    # Save mapping to file
+    
     with open(os.path.join(MODEL_DIR, 'label_map.json'), 'w') as f:
      json.dump(train_gen.class_indices, f)
      print("Saved label mapping to model/label_map.json")
@@ -87,7 +83,7 @@ def main():
                         callbacks=[checkpoint, reduce_lr, early])
     
 
-    # final save (already saved best)
+    
     model.save(os.path.join(MODEL_DIR, 'emotion_model_final.h5'))
     print("Training complete. Models saved in", MODEL_DIR)
 
