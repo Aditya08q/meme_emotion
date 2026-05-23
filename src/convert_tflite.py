@@ -1,4 +1,3 @@
-# src/convert_tflite.py
 import tensorflow as tf
 import argparse
 import os
