@@ -1,4 +1,3 @@
-# src/realtime_app.py
 import cv2
 import numpy as np
 import os
@@ -9,19 +8,16 @@ from mtcnn import MTCNN
 from PIL import Image, ImageSequence
 import json
 
-# CONFIG
+
 MODEL_PATH = "models/emotion_model.h5"     
 MEME_DIR = "meme"
 IMG_SIZE = (48,48)
 SCORE_THRESHOLD = 0.35
 
-# Load Keras model
 model = load_model(MODEL_PATH)
 
-# Face detector
 detector = MTCNN()
 
-# Build meme map: emotion -> list of media paths
 def build_meme_map(meme_dir):
     meme_map = {}
     for emo in os.listdir(meme_dir):
