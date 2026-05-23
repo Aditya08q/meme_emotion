@@ -30,15 +30,12 @@ def build_meme_map(meme_dir):
 meme_map = build_meme_map(MEME_DIR)
 print("Loaded memes for:", {k: len(v) for k,v in meme_map.items()})
 
-# Load label mapping dynamically
 with open("models/label_map.json") as f:
     label_map = json.load(f)
 
-# Reverse mapping: index -> label
 EMOTIONS = [label for label, idx in sorted(label_map.items(), key=lambda x: x[1])]
 print("Loaded emotion order:", EMOTIONS)
 
-# Preprocess face
 def preprocess_face(face_bgr):
     gray = cv2.cvtColor(face_bgr, cv2.COLOR_BGR2GRAY)
     resized = cv2.resize(gray, IMG_SIZE)
@@ -47,12 +44,10 @@ def preprocess_face(face_bgr):
     arr = np.expand_dims(arr, 0)    # (1,h,w,1)
     return arr
 
-# Pick meme
 def pick_meme(emotion):
     choices = meme_map.get(emotion, [])
     return random.choice(choices) if choices else None
 
-# Overlay static image
 def overlay_image(frame, img_path, x=0, y=0, max_w=320, max_h=320):
     img = Image.open(img_path).convert("RGBA")
     w,h = img.size
@@ -62,7 +57,6 @@ def overlay_image(frame, img_path, x=0, y=0, max_w=320, max_h=320):
     frame_pil.paste(img, (x,y), img)
     return cv2.cvtColor(np.array(frame_pil), cv2.COLOR_RGBA2BGR)
 
-# Overlay GIF
 def overlay_gif(frame, gif_path, x=0, y=0, max_w=320, max_h=320, frame_idx=0):
     gif = Image.open(gif_path)
     frames = [f.copy().convert("RGBA") for f in ImageSequence.Iterator(gif)]
@@ -74,7 +68,6 @@ def overlay_gif(frame, gif_path, x=0, y=0, max_w=320, max_h=320, frame_idx=0):
     frame_pil.paste(current_frame, (x,y), current_frame)
     return cv2.cvtColor(np.array(frame_pil), cv2.COLOR_RGBA2BGR)
 
-# Overlay video
 class VideoOverlay:
     def __init__(self, path, max_w=320, max_h=320):
         self.cap = cv2.VideoCapture(path)
@@ -92,7 +85,6 @@ class VideoOverlay:
             frame = cv2.resize(frame, (int(w*scale), int(h*scale)))
         return frame
 
-# Determine type of meme
 def get_meme_overlay(obj):
     ext = os.path.splitext(obj)[1].lower()
     if ext in ['.png','.jpg','.jpeg']:
@@ -103,7 +95,6 @@ def get_meme_overlay(obj):
         return 'video'
     return 'image'
 
-# Webcam
 cap = cv2.VideoCapture(0)
 if not cap.isOpened():
     raise RuntimeError("Cannot open webcam")
@@ -146,12 +137,10 @@ while True:
         cv2.rectangle(small, (x1,y1), (x2,y2), (0,255,0), 2)
         cv2.putText(small, f"{emo} {prob:.2f}", (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
 
-    # Top-right coordinates
     max_w, max_h = 320,320
     x = small.shape[1] - max_w - 10
     y = 10
 
-    # Overlay meme
     if current_meme:
         ext_type = get_meme_overlay(current_meme)
         if ext_type == 'image':
