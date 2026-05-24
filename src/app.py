@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 import os
 import random
 from tensorflow.keras.models import load_model
